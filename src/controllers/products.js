@@ -4,7 +4,7 @@ async function getProducts (req, res) {
     const searchQuery = req.query.name;
 
     try {
-        let query = "SELECT name, value, image FROM products";
+        let query = "SELECT id, name, value, image FROM products";
         const parametres = [];
 
         if (searchQuery) {
