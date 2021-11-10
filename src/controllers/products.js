@@ -26,20 +26,19 @@ async function getProductDetails(req, res) {
   try {
     const product = await connection.query(
       `SELECT products.name, description, code, quantity, value, image,
-       brands.name as brand, categories.name as category
+       brands.name as brand, categories.name as category 
        FROM products
        JOIN brands ON products.brand = brands.id
        JOIN categories ON products.category = categories.id
-       WHERE products.code = $1`,
+       WHERE products.code = $1;`,
       // eslint-disable-next-line comma-dangle
       [productId]
     );
-    if (product.rowCount === 0 || product?.rows === undefined) {
+    if (product.rowCount === 0 || product.rows === null) {
       return res.sendStatus(404);
     }
-    return res.send(product.rows[0]);
+    return res.send(product.rows[0]).status(200);
   } catch (error) {
-    console.log(error);
     return res.sendStatus(500);
   }
 }

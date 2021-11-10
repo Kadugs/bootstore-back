@@ -1,9 +1,13 @@
-// import app from '../src/app.js';
-// import supertest from 'supertest';
-// import connection from '../src/database/database.js';
+import supertest from 'supertest';
+import app from '../src/app.js';
 
-describe('Only one test', () => {
-  it('Sum 1 + 1 = 2', () => {
-    expect(1 + 1).toBe(2);
+describe('product-details', () => {
+  it('send a valid code expects 200', async () => {
+    const result = await supertest(app).get('/product/45654654');
+    expect(result.status).toEqual(200);
+  });
+  it('send a valid code expects 404', async () => {
+    const result = await supertest(app).get('/product/4565413');
+    expect(result.status).toEqual(404);
   });
 });
