@@ -5,7 +5,7 @@ async function getProducts(req, res) {
   const orderBy = req.query.orderby;
 
   try {
-    let query = 'SELECT id, name, value, image FROM products';
+    let query = 'SELECT code, name, value, image FROM products';
     const parametres = [];
 
     if (searchQuery) {
@@ -29,7 +29,7 @@ async function getProducts(req, res) {
   }
 }
 async function getProductDetails(req, res) {
-  const productId = req.params.id;
+  const productId = req.params.code;
   try {
     const product = await connection.query(
       `SELECT products.name, description, code, quantity, value, image,

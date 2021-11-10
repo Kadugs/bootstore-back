@@ -14,6 +14,6 @@ app.get('/cart/quantity', getCartQuantity);
 
 app.get('/ratings', getProductsRatings);
 
-app.get('/product/:id', getProductDetails);
+app.get('/product/:code', getProductDetails);
 
 export default app;
