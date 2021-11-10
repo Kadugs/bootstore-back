@@ -21,6 +21,27 @@ async function getProducts(req, res) {
     res.sendStatus(500);
   }
 }
+async function getProductDetails(req, res) {
+  const productId = req.params.id;
+  try {
+    const product = await connection.query(
+      `SELECT products.name, description, code, quantity, value, image,
+       brands.name as brand, categories.name as category
+       FROM products
+       JOIN brands ON products.brand = brands.id
+       JOIN categories ON products.category = categories.id
+       WHERE products.code = $1`,
+      // eslint-disable-next-line comma-dangle
+      [productId]
+    );
+    if (product.rowCount === 0 || product?.rows === undefined) {
+      return res.sendStatus(404);
+    }
+    return res.send(product.rows[0]);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
 
-// eslint-disable-next-line import/prefer-default-export
-export { getProducts };
+export { getProducts, getProductDetails };

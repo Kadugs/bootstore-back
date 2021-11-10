@@ -1,4 +1,4 @@
-CREATE TABLE "public.products" (
+CREATE TABLE "products" (
 	"id" serial NOT NULL,
 	"code" integer NOT NULL UNIQUE,
 	"name" TEXT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "public.products" (
 
 
 
-CREATE TABLE "public.brands" (
+CREATE TABLE "brands" (
 	"id" serial NOT NULL,
 	"name" TEXT NOT NULL UNIQUE,
 	CONSTRAINT "brands_pk" PRIMARY KEY ("id")
@@ -26,7 +26,7 @@ CREATE TABLE "public.brands" (
 
 
 
-CREATE TABLE "public.categories" (
+CREATE TABLE "categories" (
 	"id" serial NOT NULL,
 	"name" TEXT NOT NULL UNIQUE,
 	CONSTRAINT "categories_pk" PRIMARY KEY ("id")
@@ -36,7 +36,7 @@ CREATE TABLE "public.categories" (
 
 
 
-CREATE TABLE "public.users" (
+CREATE TABLE "users" (
 	"id" serial,
 	"name" varchar(50) NOT NULL,
 	"cpf" varchar(11) NOT NULL UNIQUE,
@@ -49,7 +49,7 @@ CREATE TABLE "public.users" (
 
 
 
-CREATE TABLE "public.cart" (
+CREATE TABLE "cart" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"product_id" integer NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE "public.cart" (
 
 
 
-CREATE TABLE "public.sales" (
+CREATE TABLE "sales" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"product_id" integer NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE "public.sales" (
 
 
 
-CREATE TABLE "public.ratings" (
+CREATE TABLE "ratings" (
 	"id" serial NOT NULL,
 	"sale_id" integer NOT NULL,
 	"rating" integer,
@@ -85,7 +85,7 @@ CREATE TABLE "public.ratings" (
 
 
 
-CREATE TABLE "public.sessions" (
+CREATE TABLE "sessions" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"token" uuid NOT NULL UNIQUE,
@@ -111,7 +111,7 @@ ALTER TABLE "sales" ADD CONSTRAINT "sales_fk1" FOREIGN KEY ("product_id") REFERE
 ALTER TABLE "ratings" ADD CONSTRAINT "ratings_fk0" FOREIGN KEY ("sale_id") REFERENCES "sales"("id");
 
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
-CREATE TABLE "public.products" (
+CREATE TABLE "products" (
 	"id" serial NOT NULL,
 	"code" integer NOT NULL UNIQUE,
 	"name" TEXT NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE "public.products" (
 
 
 
-CREATE TABLE "public.brands" (
+CREATE TABLE "brands" (
 	"id" serial NOT NULL,
 	"name" TEXT NOT NULL UNIQUE,
 	CONSTRAINT "brands_pk" PRIMARY KEY ("id")
@@ -139,7 +139,7 @@ CREATE TABLE "public.brands" (
 
 
 
-CREATE TABLE "public.categories" (
+CREATE TABLE "categories" (
 	"id" serial NOT NULL,
 	"name" TEXT NOT NULL UNIQUE,
 	CONSTRAINT "categories_pk" PRIMARY KEY ("id")
@@ -149,7 +149,7 @@ CREATE TABLE "public.categories" (
 
 
 
-CREATE TABLE "public.users" (
+CREATE TABLE "users" (
 	"id" serial,
 	"name" varchar(50) NOT NULL,
 	"cpf" varchar(11) NOT NULL UNIQUE,
@@ -162,7 +162,7 @@ CREATE TABLE "public.users" (
 
 
 
-CREATE TABLE "public.cart" (
+CREATE TABLE "cart" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"product_id" integer NOT NULL,
@@ -174,7 +174,7 @@ CREATE TABLE "public.cart" (
 
 
 
-CREATE TABLE "public.sales" (
+CREATE TABLE "sales" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"product_id" integer NOT NULL,
@@ -187,7 +187,7 @@ CREATE TABLE "public.sales" (
 
 
 
-CREATE TABLE "public.ratings" (
+CREATE TABLE "ratings" (
 	"id" serial NOT NULL,
 	"sale_id" integer NOT NULL,
 	"rating" integer,
@@ -198,7 +198,7 @@ CREATE TABLE "public.ratings" (
 
 
 
-CREATE TABLE "public.sessions" (
+CREATE TABLE "sessions" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"token" uuid NOT NULL UNIQUE,
