@@ -50,4 +50,22 @@ async function getProductDetails(req, res) {
   }
 }
 
-export { getProducts, getProductDetails };
+async function getProductsForVisitorCart(req, res) {
+  const { productCodes } = req.query;
+  if (productCodes?.length === 0) return res.sendStatus(404);
+  try {
+    let query = 'SELECT name, image, value FROM products WHERE ';
+    productCodes?.forEach((code, index) => {
+      if (index === productCodes.length - 1) {
+        query += `code = ${code}`;
+      } else {
+        query += `code = ${code} OR`;
+      }
+    });
+    const productsData = await connection.query(query);
+    return res.status(200).send(productsData.rows);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
+export { getProducts, getProductDetails, getProductsForVisitorCart };
