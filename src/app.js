@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { getProducts, getProductDetails } from './controllers/products.js';
 import { getProductsRatings } from './controllers/ratings.js';
-import { getCartQuantity } from './controllers/cart.js';
+import { getCartQuantity, addToCart } from './controllers/cart.js';
 
 const app = express();
 app.use(cors());
@@ -15,5 +15,7 @@ app.get('/cart/quantity', getCartQuantity);
 app.get('/ratings', getProductsRatings);
 
 app.get('/product/:code', getProductDetails);
+
+app.post('/cart', addToCart);
 
 export default app;
