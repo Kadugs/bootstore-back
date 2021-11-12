@@ -1,7 +1,6 @@
 import app from './app.js';
 
-const port = 4000;
-
-app.listen(port, () => {
-  console.log(`server running on port ${port}`);
+app.listen(process.env.PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server running on port ${process.env.PORT}`);
 });
