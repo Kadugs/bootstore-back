@@ -44,7 +44,7 @@ async function addToCart(req, res) {
     const product = result3.rows[0];
 
     if (product) {
-      await connection.query('UPDATE cart SET quantity = $1 WHERE id = $2;', [product.quantity + quantity, product.id]);
+      await connection.query('UPDATE cart SET quantity = $1 WHERE id = $2;', [quantity, product.id]);
     } else {
       await connection.query('INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3);', [userId, productId, quantity]);
     }
