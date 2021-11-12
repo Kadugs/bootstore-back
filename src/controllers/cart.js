@@ -28,7 +28,7 @@ async function getCart(req, res) {
 async function addToCart(req, res) {
   const { code, quantity } = req.body;
   const token = req.headers.authorization?.replace('Bearer ', '');
-
+  console.log(code, quantity, token);
   if (!code || quantity < 1) return res.sendStatus(400);
   if (!token) return res.sendStatus(401);
 
@@ -57,7 +57,7 @@ async function addToCart(req, res) {
 
     if (product) {
       await connection.query('UPDATE cart SET quantity = $1 WHERE id = $2;', [
-        product.quantity + quantity,
+        quantity,
         product.id,
       ]);
     } else {
@@ -74,5 +74,4 @@ async function addToCart(req, res) {
     return res.sendStatus(500);
   }
 }
-
 export { getCart, addToCart };
