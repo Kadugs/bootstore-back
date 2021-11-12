@@ -2,8 +2,9 @@ import joi from 'joi';
 
 function isSignUpDataValid(object) {
   const signUpSchema = joi.object({
-    name: joi.string().trim().min(1).max(50)
+    name: joi.string().trim().min(3).max(50)
       .required(),
+    cpf: joi.string().alphanum().length(11).required(),
     email: joi.string().trim().email().max(50)
       .required(),
     repeatEmail: joi.ref('email'),
