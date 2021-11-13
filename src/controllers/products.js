@@ -51,7 +51,6 @@ async function getProductDetails(req, res) {
 
 async function getProductsForVisitorCart(req, res) {
   const { productCodes } = req.query;
-  console.log(req);
   if (!productCodes) return res.sendStatus(404);
   try {
     let query = 'SELECT name, image, value FROM products WHERE ';
