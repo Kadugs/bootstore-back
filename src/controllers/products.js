@@ -67,4 +67,32 @@ async function getProductsForVisitorCart(req, res) {
     return res.sendStatus(500);
   }
 }
-export { getProducts, getProductDetails, getProductsForVisitorCart };
+
+async function getProductQuantity(req, res) {
+  const { code } = req.query;
+
+  if (!code) return res.sendStatus(404);
+
+  let query = 'SELECT quantity FROM products WHERE ';
+  code.forEach((itemCode, index) => {
+    if (index === code.length - 1) {
+      query += `code=${itemCode}`;
+    } else {
+      query += `code=${itemCode} OR `;
+    }
+  });
+  console.log(query);
+  try {
+    const quantities = await connection.query(query);
+    const arrQuantities = quantities.rows.map((quant) => quant.quantity);
+    return res.send(arrQuantities).status(200);
+  } catch {
+    return res.sendStatus(500);
+  }
+}
+export {
+  getProducts,
+  getProductDetails,
+  getProductsForVisitorCart,
+  getProductQuantity,
+};
