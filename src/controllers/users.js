@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import connection from '../database/database.js';
 import { isSignUpDataValid } from '../validation/signUp.js';
 
@@ -6,8 +7,10 @@ async function signUp(req, res) {
 
   if (!isSignUpDataValid(req.body)) return res.sendStatus(400);
 
+  const passwordHash = bcrypt.hashSync(password, 10);
+
   try {
-    await connection.query('INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);', [name, cpf, password, email]);
+    await connection.query('INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);', [name, cpf, passwordHash, email]);
 
     return res.sendStatus(201);
   } catch (error) {
