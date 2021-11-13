@@ -1,13 +1,13 @@
 CREATE TABLE "products" (
 	"id" serial NOT NULL,
-	"code" integer NOT NULL UNIQUE,
+	"code" text NOT NULL,
 	"name" TEXT NOT NULL,
 	"quantity" integer NOT NULL,
 	"description" TEXT NOT NULL,
 	"value" numeric NOT NULL,
 	"image" TEXT NOT NULL,
-	"brand" integer NOT NULL,
-	"category" integer NOT NULL,
+	"brand_id" integer NOT NULL,
+	"category_id" integer NOT NULL,
 	"visits" integer NOT NULL DEFAULT '0',
 	CONSTRAINT "products_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -67,22 +67,11 @@ CREATE TABLE "sales" (
 	"product_id" integer NOT NULL,
 	"quantity" integer NOT NULL,
 	"time" TIMESTAMP NOT NULL,
+	"rating" integer,
 	CONSTRAINT "sales_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
-
-
-
-CREATE TABLE "ratings" (
-	"id" serial NOT NULL,
-	"sale_id" integer NOT NULL,
-	"rating" integer,
-	CONSTRAINT "ratings_pk" PRIMARY KEY ("id")
-) WITH (
-  OIDS=FALSE
-);
-
 
 
 CREATE TABLE "sessions" (

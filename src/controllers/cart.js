@@ -1,5 +1,6 @@
 import connection from '../database/database.js';
 
+
 async function getCart(req, res) {
   const token = req.headers['authorization']?.replace('Bearer ', '');
 
@@ -7,8 +8,9 @@ async function getCart(req, res) {
 
   try {
     const result = await connection.query(
-      `
-            SELECT products.code, products.name, products.image, products.value, cart.quantity FROM cart JOIN products ON products.id = cart.product_id JOIN sessions ON sessions.user_id = cart.user_id WHERE sessions.token = $1;    
+      `SELECT products.code, products.name, products.image, products.value, 
+          cart.quantity FROM cart JOIN products ON products.id = cart.product_id 
+          JOIN sessions ON sessions.user_id = cart.user_id WHERE sessions.token = $1;    
         `, [token],
     );
     const cart = result.rows;
@@ -42,14 +44,14 @@ async function addToCart(req, res) {
     const product = result3.rows[0];
 
     if (product) {
-      await connection.query('UPDATE cart SET quantity = $1 WHERE id = $2;', [product.quantity + quantity, product.id]);
+      await connection.query('UPDATE cart SET quantity = $1 WHERE id = $2;', [quantity, product.id]);
     } else {
       await connection.query('INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3);', [userId, productId, quantity]);
     }
 
     return res.sendStatus(200);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 }

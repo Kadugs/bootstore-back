@@ -24,7 +24,6 @@ async function getProducts(req, res) {
     const productsList = result.rows;
     res.status(200).send(productsList);
   } catch (error) {
-    console.error(error);
     res.sendStatus(500);
   }
 }
@@ -44,10 +43,29 @@ async function getProductDetails(req, res) {
     if (product.rowCount === 0 || product.rows === null) {
       return res.sendStatus(404);
     }
-    return res.send(product.rows[0]).status(200);
+    return res.status(200).send(product.rows[0]);
   } catch (error) {
     return res.sendStatus(500);
   }
 }
 
-export { getProducts, getProductDetails };
+async function getProductsForVisitorCart(req, res) {
+  const { productCodes } = req.query;
+  console.log(req);
+  if (!productCodes) return res.sendStatus(404);
+  try {
+    let query = 'SELECT name, image, value FROM products WHERE ';
+    productCodes?.forEach((code, index) => {
+      if (index === productCodes.length - 1) {
+        query += `code = ${code}`;
+      } else {
+        query += `code = ${code} OR`;
+      }
+    });
+    const productsData = await connection.query(query);
+    return res.status(200).send(productsData.rows);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
+export { getProducts, getProductDetails, getProductsForVisitorCart };
