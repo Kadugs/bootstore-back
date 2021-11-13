@@ -11,3 +11,16 @@ describe('product-details', () => {
     expect(result.status).toEqual(404);
   });
 });
+describe('visitor-cart', () => {
+  it('expect 200 for valid params', async () => {
+    const result = await supertest(app)
+      .get('/products/cart')
+      .query({
+        params: {
+          productCodes: [45654654],
+        },
+      });
+    console.log(result);
+    expect(result.status).toEqual(200);
+  });
+});
