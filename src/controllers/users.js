@@ -13,8 +13,8 @@ async function signUp(req, res) {
   } catch (error) {
     console.log(error);
     const { constraint } = error;
-    if (constraint === 'users_cpf_key') return res.status(409).send('CPF já cadastrado!');
-    if (constraint === 'users_email_key') return res.status(409).send('Email já cadastrado!');
+    if (constraint === 'users_cpf_key') return res.status(409).send('cpf');
+    if (constraint === 'users_email_key') return res.status(409).send('email');
 
     return res.sendStatus(500);
   }
