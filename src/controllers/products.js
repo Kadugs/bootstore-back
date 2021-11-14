@@ -70,23 +70,22 @@ async function getProductsForVisitorCart(req, res) {
 
 async function getProductQuantity(req, res) {
   const { code } = req.query;
-
   if (!code) return res.sendStatus(404);
-
+  const arrCodes = [code];
   let query = 'SELECT quantity FROM products WHERE ';
-  code.forEach((itemCode, index) => {
-    if (index === code.length - 1) {
+  arrCodes.forEach((itemCode, index) => {
+    if (index === arrCodes.length - 1) {
       query += `code=${itemCode}`;
     } else {
       query += `code=${itemCode} OR `;
     }
   });
-  console.log(query);
   try {
     const quantities = await connection.query(query);
     const arrQuantities = quantities.rows.map((quant) => quant.quantity);
     return res.send(arrQuantities).status(200);
-  } catch {
+  } catch (error) {
+    console.error(error);
     return res.sendStatus(500);
   }
 }
