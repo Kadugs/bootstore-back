@@ -1,6 +1,7 @@
-import connection from '../database/database.js';
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
+import connection from '../database/database.js';
+import { isSignUpDataValid } from '../validation/signUp.js';
 
 async function signIn(req, res) {
   const {
@@ -37,6 +38,28 @@ async function signIn(req, res) {
   }
 }
 
+async function signUp(req, res) {
+  const { name, cpf, password, email } = req.body;
+
+  if (!isSignUpDataValid(req.body)) return res.sendStatus(400);
+
+  const passwordHash = bcrypt.hashSync(password, 10);
+
+  try {
+    await connection.query('INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);', [name, cpf, passwordHash, email]);
+
+    return res.sendStatus(201);
+  } catch (error) {
+    console.log(error);
+    const { constraint } = error;
+    if (constraint === 'users_cpf_key') return res.status(409).send('cpf');
+    if (constraint === 'users_email_key') return res.status(409).send('email');
+
+    return res.sendStatus(500);
+  }
+}
+
 export {
   signIn,
+  signUp,
 };
