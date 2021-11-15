@@ -1,6 +1,5 @@
 import connection from '../database/database.js';
 
-
 async function getCart(req, res) {
   const newLocal = 'authorization';
   const token = req.headers[newLocal]?.replace('Bearer ', '');

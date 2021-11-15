@@ -5,8 +5,9 @@ import {
   getProductDetails,
   getProductsForVisitorCart,
 } from './controllers/products.js';
-import { getProductsRatings } from './controllers/ratings.js';
+import { getProductsRatings, getProductRating } from './controllers/ratings.js';
 import { getCart, addToCart, deleteFromCart } from './controllers/cart.js';
+import { getPurchaseProducts } from './controllers/purchase.js';
 import { signUp } from './controllers/users.js';
 
 const app = express();
@@ -19,6 +20,8 @@ app.get('/cart', getCart);
 
 app.get('/ratings', getProductsRatings);
 
+app.get('/ratings/:code', getProductRating);
+
 app.get('/product/:code', getProductDetails);
 
 app.get('/products/cart', getProductsForVisitorCart);
@@ -28,5 +31,7 @@ app.post('/cart', addToCart);
 app.post('/sign-up', signUp);
 
 app.delete('/cart/:code', deleteFromCart);
+
+app.get('/purchase', getPurchaseProducts);
 
 export default app;

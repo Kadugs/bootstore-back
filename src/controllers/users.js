@@ -10,7 +10,10 @@ async function signUp(req, res) {
   const passwordHash = bcrypt.hashSync(password, 10);
 
   try {
-    await connection.query('INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);', [name, cpf, passwordHash, email]);
+    await connection.query(
+      'INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);',
+      [name, cpf, passwordHash, email]
+    );
 
     return res.sendStatus(201);
   } catch (error) {
@@ -23,6 +26,4 @@ async function signUp(req, res) {
   }
 }
 
-export {
-  signUp,
-};
+export { signUp };
