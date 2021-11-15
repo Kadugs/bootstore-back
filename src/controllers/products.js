@@ -69,9 +69,9 @@ async function getProductsForVisitorCart(req, res) {
 }
 
 async function getProductQuantity(req, res) {
-  const { code } = req.query;
-  if (!code) return res.sendStatus(404);
-  const arrCodes = [code];
+  const { codes } = req.query;
+  if (!codes) return res.sendStatus(404);
+  const arrCodes = [codes];
   let query = 'SELECT quantity FROM products WHERE ';
   arrCodes.forEach((itemCode, index) => {
     if (index === arrCodes.length - 1) {
