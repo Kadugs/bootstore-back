@@ -30,7 +30,7 @@ async function getProductsRatings(req, res) {
 
     res.status(200).send(ratings);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(500);
   }
 }
@@ -68,7 +68,38 @@ async function getProductRating(req, res) {
   }
 }
 
-// async function postProductRating(req, res) {}
+async function postProductsRating(req, res) {
+  const newLocal = 'authorization';
+  const token = req.headers[newLocal]?.replace('Bearer ', '');
+  if (!token) return res.sendStatus(401);
+  const { code, value } = req.body;
+  try {
+    const anotherRatings = await connection.query(
+      `
+      SELECT ratings.rating, sales.id
+      FROM sales
+      LEFT JOIN ratings ON sales.id = ratings.sale_id
+      JOIN users ON sales.user_id = users.id
+      JOIN products ON sales.product_id = products.id
+      JOIN sessions ON sales.user_id = sessions.id
+      WHERE products.code = $1 AND sessions.token = $2;
+    `,
+      [code, token]
+    );
+    let query = '';
+    anotherRatings.rows.forEach((item) => {
+      if (!item?.rating) {
+        query += `INSERT INTO ratings (sale_id, rating) VALUES (${item.id}, ${value});`;
+      } else {
+        query += `UPDATE ratings SET rating = ${value} WHERE sale_id=${item.id};`;
+      }
+    });
+    await connection.query(query);
+    return res.sendStatus(201);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+}
 
-// eslint-disable-next-line import/prefer-default-export
-export { getProductsRatings, getProductRating };
+export { getProductsRatings, getProductRating, postProductsRating };

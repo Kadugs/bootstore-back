@@ -17,7 +17,6 @@ async function getPurchaseProducts(req, res) {
       `,
       [token]
     );
-    console.log(userProducts.rows);
     return res.send(userProducts.rows);
   } catch (err) {
     console.error(err);

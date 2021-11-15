@@ -20,7 +20,7 @@ async function getCart(req, res) {
     return res.status(200).send(cart);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 }
