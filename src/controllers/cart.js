@@ -77,6 +77,9 @@ async function addToCart(req, res) {
 async function deleteFromCart(req, res) {
   const { code } = req.params;
   const token = req.headers.authorization?.replace('Bearer ', '');
+
+  if (!token) return res.sendStatus(401);
+
   try {
     const userData = await connection.query(
       `

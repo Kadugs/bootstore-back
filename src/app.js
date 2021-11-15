@@ -1,10 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import {
-  getProducts,
-  getProductDetails,
-  getProductsForVisitorCart,
-} from './controllers/products.js';
+import { getProducts, getProductDetails } from './controllers/products.js';
 import {
   getProductsRatings,
   getProductRating,
@@ -21,8 +17,6 @@ app.use(express.json());
 app.get('/products', getProducts);
 
 app.get('/product/:code', getProductDetails);
-
-app.get('/products/cart', getProductsForVisitorCart);
 
 app.get('/cart', getCart);
 
