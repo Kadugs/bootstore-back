@@ -31,7 +31,7 @@ app.post('/sign-up', signUp);
 
 app.delete('/cart/:code', deleteFromCart);
 
-app.get('/products/quantity/:quantity', getProductQuantity);
+app.get('/products/quantity/:codes', getProductQuantity);
 
 app.post('/purchase', confirmPurchase);
 
