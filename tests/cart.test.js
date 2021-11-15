@@ -1,7 +1,15 @@
 import supertest from 'supertest';
 import app from '../src/app.js';
+import connection from '../src/database/database.js';
 
-beforeAll(() => {});
+beforeAll(async () => {
+  await connection.query(
+    'INSERT INTO cart (user_id, product_id, quantity) VALUES (1, 3, 1)'
+  );
+});
+afterAll(async () => {
+  await connection.query('DELETE FROM cart WHERE user_id=1');
+});
 describe('GET /cart', () => {
   it('should require authorization', async () => {
     const result = await supertest(app).get('/cart');
@@ -72,7 +80,6 @@ describe('DELETE /cart/:code', () => {
     const result = await supertest(app)
       .delete(`/cart/${code}`)
       .set('authorization', token);
-    console.log(result);
     expect(result.status).toEqual(200);
   });
 });
