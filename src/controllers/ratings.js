@@ -3,7 +3,7 @@ import connection from '../database/database.js';
 async function getProductsRatings(req, res) {
   try {
     const result = await connection.query(
-      'SELECT ratings.rating, products.code FROM ratings JOIN sales ON ratings.sale_id = sales.id JOIN products ON sales.product_id = products.id;',
+      'SELECT sales.rating, products.code FROM sales JOIN products ON sales.product_id = products.id;'
     );
 
     const ratings = [];
@@ -12,10 +12,11 @@ async function getProductsRatings(req, res) {
     while (separatedRatings.length > 0) {
       const productCode = separatedRatings[0].code;
       const productRatings = separatedRatings.filter(
-        (rating) => rating.code === productCode,
+        (rating) => rating.code === productCode
       );
-      const averageRating = productRatings.map((item) => item.rating)
-        .reduce((a, b) => a + b, 0) / productRatings.length;
+      const averageRating =
+        productRatings.map((item) => item.rating).reduce((a, b) => a + b, 0) /
+        productRatings.length;
 
       ratings.push({
         productCode,
@@ -23,7 +24,7 @@ async function getProductsRatings(req, res) {
         quantity: productRatings.length,
       });
       separatedRatings = separatedRatings.filter(
-        (rating) => rating.code !== productCode,
+        (rating) => rating.code !== productCode
       );
     }
 
