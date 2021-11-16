@@ -78,3 +78,56 @@ describe('/POST sign-up', () => {
     expect(result.status).toEqual(201);
   });
 });
+
+describe('POST /sign-in', () => {
+  let user = {};
+
+  beforeAll(async () => {
+    user = await createUser();
+  });
+
+  afterAll(async () => {
+    await connection.query('DELETE FROM sessions;');
+
+    await connection.query('DELETE FROM users;');
+  });
+
+  it('returns 400 for invalid data', async () => {
+    const body = {
+      email: user.email,
+    };
+
+    const result = await agent.post('/sign-in').send(body);
+    expect(result.status).toEqual(400);
+  });
+
+  it('returns 404 for not registered email', async () => {
+    const body = {
+      email: faker.internet.email(),
+      password: user.password,
+    };
+
+    const result = await agent.post('/sign-in').send(body);
+    expect(result.status).toEqual(404);
+  });
+
+  it('returns 401 for wrong password', async () => {
+    const body = {
+      email: user.email,
+      password: faker.internet.password(16, false, /^[a-zA-Z0-9]*$/),
+    };
+
+    const result = await agent.post('/sign-in').send(body);
+    expect(result.status).toEqual(401);
+  });
+
+  it('returns 200 for valid email and password', async () => {
+    const body = {
+      email: user.email,
+      password: user.password,
+    };
+
+    const result = await agent.post('/sign-in').send(body);
+    expect(result.status).toEqual(200);
+  });
+});
