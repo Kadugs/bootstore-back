@@ -2,9 +2,9 @@ import connection from '../database/database.js';
 
 async function getProductsRatings(req, res) {
   try {
-    const result = await connection.query(
-      'SELECT ratings.rating, products.code FROM ratings JOIN sales ON ratings.sale_id = sales.id JOIN products ON sales.product_id = products.id;'
-    );
+    const result = await connection.query(`
+      SELECT products.code, sales.rating FROM sales
+        JOIN products ON sales.product_id = products.id;`);
 
     const ratings = [];
 
@@ -39,10 +39,9 @@ async function getProductRating(req, res) {
   const { code } = req.params;
   try {
     const result = await connection.query(
-      `SELECT ratings.rating as "rating", products.id as "productId", sales.id as "salesId"
-        FROM ratings
-        JOIN sales ON ratings.sale_id = sales.id
-        JOIN products ON sales.product_id = products.id WHERE products.code = $1`,
+      `SELECT sales.rating as "rating", products.id as "productId", sales.id as "salesId"
+        FROM sales JOIN products ON sales.product_id = products.id
+        WHERE products.code = $1`,
       [code]
     );
     let averageRating = 0;
@@ -76,9 +75,8 @@ async function postProductsRating(req, res) {
   try {
     const anotherRatings = await connection.query(
       `
-      SELECT ratings.rating, sales.id
+      SELECT sales.rating, sales.id
       FROM sales
-      LEFT JOIN ratings ON sales.id = ratings.sale_id
       JOIN users ON sales.user_id = users.id
       JOIN products ON sales.product_id = products.id
       JOIN sessions ON sales.user_id = sessions.id
@@ -88,11 +86,7 @@ async function postProductsRating(req, res) {
     );
     let query = '';
     anotherRatings.rows.forEach((item) => {
-      if (!item?.rating) {
-        query += `INSERT INTO ratings (sale_id, rating) VALUES (${item.id}, ${value});`;
-      } else {
-        query += `UPDATE ratings SET rating = ${value} WHERE sale_id=${item.id};`;
-      }
+      query += `UPDATE sales SET rating = ${value} WHERE id=${item.id};`;
     });
     await connection.query(query);
     return res.sendStatus(201);
