@@ -15,6 +15,7 @@ describe('/POST sign-up', () => {
   });
 
   afterAll(async () => {
+    await connection.query('DELETE FROM sessions;');
     await connection.query('DELETE FROM users;');
   });
 
@@ -88,7 +89,6 @@ describe('POST /sign-in', () => {
 
   afterAll(async () => {
     await connection.query('DELETE FROM sessions;');
-
     await connection.query('DELETE FROM users;');
   });
 

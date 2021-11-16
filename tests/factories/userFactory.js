@@ -21,3 +21,12 @@ export async function createUser() {
 
   return user;
 }
+
+export async function createSession() {
+  const user = await createUser();
+
+  const result = await connection.query('INSERT INTO sessions (user_id, token) VALUES ($1, $2) RETURNING *;', [user.id, faker.datatype.uuid()]);
+  const session = result.rows[0];
+
+  return session;
+}
