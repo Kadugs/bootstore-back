@@ -2,9 +2,9 @@ import connection from '../database/database.js';
 
 async function getProductsRatings(req, res) {
   try {
-    const result = await connection.query(`
-      SELECT products.code, sales.rating FROM sales
-        JOIN products ON sales.product_id = products.id;`);
+    const result = await connection.query(
+      'SELECT sales.rating, products.code FROM sales JOIN products ON sales.product_id = products.id;'
+    );
 
     const ratings = [];
 

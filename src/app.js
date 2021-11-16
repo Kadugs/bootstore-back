@@ -1,14 +1,22 @@
 import express from 'express';
 import cors from 'cors';
-import { getProducts, getProductDetails } from './controllers/products.js';
 import {
   getProductsRatings,
   getProductRating,
   postProductsRating,
 } from './controllers/ratings.js';
 import { getCart, addToCart, deleteFromCart } from './controllers/cart.js';
-import { getPurchaseProducts } from './controllers/purchase.js';
-import { signUp } from './controllers/users.js';
+import {
+  getPurchaseProducts,
+  confirmPurchase,
+} from './controllers/purchase.js';
+import { signUp, signIn } from './controllers/users.js';
+
+import {
+  getProducts,
+  getProductDetails,
+  getProductQuantity,
+} from './controllers/products.js';
 
 const app = express();
 app.use(cors());
@@ -33,5 +41,11 @@ app.get('/ratings/:code', getProductRating);
 app.post('/sign-up', signUp);
 
 app.get('/purchase', getPurchaseProducts);
+
+app.post('/sign-in', signIn);
+
+app.get('/products/quantity/:codes', getProductQuantity);
+
+app.post('/purchase', confirmPurchase);
 
 export default app;
