@@ -32,9 +32,9 @@ export async function createProduct() {
   const category = await createCategory();
 
   const product = {
-    code: faker.random.number({ min: 10000, max: 99999 }),
+    code: faker.datatype.number({ min: 10000, max: 99999 }),
     name: faker.commerce.productName(),
-    quantity: faker.random.number({ min: 1, max: 1000 }),
+    quantity: faker.datatype.number({ min: 1, max: 1000 }),
     description: faker.commerce.productDescription(),
     value: faker.commerce.price(),
     image: faker.image.imageUrl(),
