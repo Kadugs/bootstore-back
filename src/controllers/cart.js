@@ -1,6 +1,5 @@
 import connection from '../database/database.js';
 
-
 async function getCart(req, res) {
   const newLocal = 'authorization';
   const token = req.headers[newLocal]?.replace('Bearer ', '');
@@ -21,7 +20,7 @@ async function getCart(req, res) {
     return res.status(200).send(cart);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 }
@@ -78,6 +77,9 @@ async function addToCart(req, res) {
 async function deleteFromCart(req, res) {
   const { code } = req.params;
   const token = req.headers.authorization?.replace('Bearer ', '');
+
+  if (!token) return res.sendStatus(401);
+
   try {
     const userData = await connection.query(
       `
