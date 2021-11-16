@@ -38,7 +38,7 @@ async function getProductDetails(req, res) {
        JOIN categories ON products.category = categories.id
        WHERE products.code = $1;`,
       // eslint-disable-next-line comma-dangle
-      [productId]
+      [toString(productId)]
     );
     if (product.rowCount === 0 || product.rows === null) {
       return res.sendStatus(404);
