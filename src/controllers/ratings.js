@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import connection from '../database/database.js';
 
 async function getProductsRatings(req, res) {
   try {
     const result = await connection.query(
-      'SELECT ratings.rating, products.code FROM ratings JOIN sales ON ratings.sale_id = sales.id JOIN products ON sales.product_id = products.id;',
+      'SELECT sales.rating, products.code FROM sales JOIN products ON sales.product_id = products.id;',
     );
 
     const ratings = [];
@@ -14,8 +15,8 @@ async function getProductsRatings(req, res) {
       const productRatings = separatedRatings.filter(
         (rating) => rating.code === productCode,
       );
-      const averageRating = productRatings.map((item) => item.rating)
-        .reduce((a, b) => a + b, 0) / productRatings.length;
+      const averageRating = productRatings.map((item) => item.rating).reduce((a, b) => a + b, 0)
+      / productRatings.length;
 
       ratings.push({
         productCode,
@@ -29,10 +30,70 @@ async function getProductsRatings(req, res) {
 
     res.status(200).send(ratings);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(500);
   }
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { getProductsRatings };
+async function getProductRating(req, res) {
+  const { code } = req.params;
+  try {
+    const result = await connection.query(
+      `SELECT sales.rating as "rating", products.id as "productId", sales.id as "salesId"
+        FROM sales JOIN products ON sales.product_id = products.id
+        WHERE products.code = $1`,
+      [code],
+    );
+    let averageRating = 0;
+    if (result.rowCount === 0) {
+      const rating = {
+        average: 0,
+        quantity: 0,
+      };
+      return res.send(rating);
+    }
+    result.rows.forEach((item) => {
+      averageRating += item.rating;
+    });
+    averageRating /= result.rowCount;
+    const rating = {
+      average: averageRating,
+      quantity: result.rowCount,
+    };
+    return res.send(rating);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+}
+
+async function postProductsRating(req, res) {
+  const newLocal = 'authorization';
+  const token = req.headers[newLocal]?.replace('Bearer ', '');
+  if (!token) return res.sendStatus(401);
+  const { code, value } = req.body;
+  try {
+    const anotherRatings = await connection.query(
+      `
+      SELECT sales.rating, sales.id
+      FROM sales
+      JOIN users ON sales.user_id = users.id
+      JOIN products ON sales.product_id = products.id
+      JOIN sessions ON sales.user_id = sessions.id
+      WHERE products.code = $1 AND sessions.token = $2;
+    `,
+      [code, token],
+    );
+    let query = '';
+    anotherRatings.rows.forEach((item) => {
+      query += `UPDATE sales SET rating = ${value} WHERE id=${item.id};`;
+    });
+    await connection.query(query);
+    return res.sendStatus(201);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+}
+
+export { getProductsRatings, getProductRating, postProductsRating };
