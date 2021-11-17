@@ -16,8 +16,7 @@ async function signIn(req, res) {
     const user = result.rows[0];
 
     if (!user) return res.sendStatus(404);
-    if (!bcrypt.compareSync(password, user.password))
-      return res.sendStatus(401);
+    if (!bcrypt.compareSync(password, user.password)) return res.sendStatus(401);
 
     const result2 = await connection.query(
       'SELECT * FROM sessions WHERE user_id = $1;',
