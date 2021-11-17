@@ -36,7 +36,7 @@ async function getProductDetails(req, res) {
        brands.name as brand, categories.name as category 
        FROM products
        JOIN brands ON products.brand_id = brands.id
-       JOIN categories ON products.category = categories.id
+       JOIN categories ON products.category_id = categories.id
        WHERE products.code = $1;`,
       // eslint-disable-next-line comma-dangle
       [productId]
