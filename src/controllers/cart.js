@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import connection from '../database/database.js';
 
-
 async function getCart(req, res) {
-  const token = req.headers['authorization']?.replace('Bearer ', '');
+  const auth = 'authorization';
+  const token = req.headers[auth]?.replace('Bearer ', '');
 
   if (!token) return res.sendStatus(401);
 
@@ -17,7 +18,7 @@ async function getCart(req, res) {
 
     return res.status(200).send(cart);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 }
