@@ -19,23 +19,22 @@ async function signIn(req, res) {
     if (!user) return res.sendStatus(404);
     if (!bcrypt.compareSync(password, user.password)) return res.sendStatus(401);
 
-    const result2 = await connection.query(
-      'SELECT * FROM sessions WHERE user_id = $1;',
-      [user.id],
-    );
+    const result2 = await connection.query('SELECT * FROM sessions WHERE user_id = $1;', [
+      user.id,
+    ]);
     const previousSession = result2.rows[0];
 
     const newToken = uuid();
     if (previousSession) {
-      await connection.query(
-        'UPDATE sessions SET token = $1 WHERE user_id = $2;',
-        [newToken, user.id],
-      );
+      await connection.query('UPDATE sessions SET token = $1 WHERE user_id = $2;', [
+        newToken,
+        user.id,
+      ]);
     } else {
-      await connection.query(
-        'INSERT INTO sessions (user_id, token) VALUES ($1, $2);',
-        [user.id, newToken],
-      );
+      await connection.query('INSERT INTO sessions (user_id, token) VALUES ($1, $2);', [
+        user.id,
+        newToken,
+      ]);
     }
 
     return res.status(200).send({
@@ -49,12 +48,7 @@ async function signIn(req, res) {
 }
 
 async function signUp(req, res) {
-  const {
-    name,
-    cpf,
-    password,
-    email,
-  } = req.body;
+  const { name, cpf, password, email } = req.body;
 
   if (!isSignUpDataValid(req.body)) return res.sendStatus(400);
 

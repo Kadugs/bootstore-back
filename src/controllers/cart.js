@@ -41,10 +41,9 @@ async function addToCart(req, res) {
 
     if (!userId) return res.sendStatus(401);
 
-    const result2 = await connection.query(
-      'SELECT id FROM products WHERE code = $1;',
-      [code],
-    );
+    const result2 = await connection.query('SELECT id FROM products WHERE code = $1;', [
+      code,
+    ]);
     const productId = result2.rows[0]?.id;
 
     if (!productId) return res.sendStatus(404);
@@ -93,17 +92,17 @@ async function deleteFromCart(req, res) {
       [code, token],
     );
     if (
-      !userData?.rows[0].userId
-      || !userData?.rows[0].productId
-      || !userData?.rows[0].token
-      || !userData?.rows[0].code
+      !userData?.rows[0].userId ||
+      !userData?.rows[0].productId ||
+      !userData?.rows[0].token ||
+      !userData?.rows[0].code
     ) {
       return res.sendStatus(404);
     }
-    await connection.query(
-      'DELETE FROM cart WHERE user_id = $1 AND product_id = $2;',
-      [userData?.rows[0].userId, userData?.rows[0].productId],
-    );
+    await connection.query('DELETE FROM cart WHERE user_id = $1 AND product_id = $2;', [
+      userData?.rows[0].userId,
+      userData?.rows[0].productId,
+    ]);
     return res.sendStatus(200);
   } catch (error) {
     return res.sendStatus(500);

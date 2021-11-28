@@ -6,10 +6,7 @@ import {
   postProductsRating,
 } from './controllers/ratings.js';
 import { getCart, addToCart, deleteFromCart } from './controllers/cart.js';
-import {
-  getPurchaseProducts,
-  confirmPurchase,
-} from './controllers/purchase.js';
+import { getPurchaseProducts, confirmPurchase } from './controllers/purchase.js';
 import { signUp, signIn } from './controllers/users.js';
 
 import {

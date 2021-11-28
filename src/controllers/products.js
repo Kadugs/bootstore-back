@@ -39,7 +39,7 @@ async function getProductDetails(req, res) {
        JOIN categories ON products.category_id = categories.id
        WHERE products.code = $1;`,
       // eslint-disable-next-line comma-dangle
-      [productId]
+      [productId],
     );
     if (product.rowCount === 0 || product.rows === null) {
       return res.sendStatus(404);
@@ -90,9 +90,4 @@ async function getProductQuantity(req, res) {
     return res.sendStatus(500);
   }
 }
-export {
-  getProducts,
-  getProductDetails,
-  getProductsForVisitorCart,
-  getProductQuantity,
-};
+export { getProducts, getProductDetails, getProductsForVisitorCart, getProductQuantity };

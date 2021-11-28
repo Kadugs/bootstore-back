@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 import supertest from 'supertest';
 import app from '../src/app.js';
 import connection from '../src/database/database.js';
 
 beforeAll(async () => {
   await connection.query(
-    'INSERT INTO cart (user_id, product_id, quantity) VALUES (1, 3, 1)'
+    'INSERT INTO cart (user_id, product_id, quantity) VALUES (1, 3, 1)',
   );
 });
 afterAll(async () => {
@@ -18,9 +19,7 @@ describe('GET /cart', () => {
   });
   it('send a valid token expects 200', async () => {
     const token = 'Bearer 7a6789bc-22b1-422b-8bbc-71161dafa15a';
-    const result = await supertest(app)
-      .get('/cart')
-      .set('authorization', token);
+    const result = await supertest(app).get('/cart').set('authorization', token);
     expect(result.status).toEqual(200);
   });
 });

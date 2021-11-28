@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import connection from '../database/database.js';
 
 async function getPurchaseProducts(req, res) {
@@ -14,7 +15,7 @@ async function getPurchaseProducts(req, res) {
         JOIN sessions ON sessions.user_id = sales.user_id
         WHERE sessions.token = $1;
       `,
-      [token]
+      [token],
     );
     return res.send(userProducts.rows);
   } catch (err) {
@@ -35,7 +36,7 @@ async function confirmPurchase(req, res) {
         JOIN cart
         ON sessions.user_id = cart.user_id
         WHERE sessions.token = $1`,
-      [token]
+      [token],
     );
     let query = '';
     userInfos.rows.forEach((item) => {
