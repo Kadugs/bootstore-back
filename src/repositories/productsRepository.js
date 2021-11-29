@@ -1,4 +1,4 @@
-import connection from '../database';
+import connection from '../database.js';
 
 async function getProductIdByCode(code) {
   const result = await connection.query('SELECT id FROM products WHERE code = $1;', [
