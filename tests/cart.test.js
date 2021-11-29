@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import '../setup';
 import supertest from 'supertest';
+import faker from 'faker';
 import app from '../src/app.js';
 import connection from '../src/database.js';
 import { createProduct } from './factories/productFactory.js';
