@@ -9,6 +9,14 @@ const databaseConfig = {
   },
 };
 
-const connection = new Pool(databaseConfig);
+const testDatabase = {
+  host: 'localhost',
+  port: 5432,
+  user: 'postgres',
+  password: 12345,
+  database: 'bootstore_test',
+};
+
+const connection = new Pool(process.env.NODE_ENV === 'test' ? testDatabase : databaseConfig);
 
 export default connection;

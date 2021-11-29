@@ -68,7 +68,7 @@ async function signUp(req, res) {
 
     return res.sendStatus(201);
   } catch (error) {
-    console.error(error);
+    console.log(error);
     const { constraint } = error;
     if (constraint === 'users_cpf_key') return res.status(409).send('cpf');
     if (constraint === 'users_email_key') return res.status(409).send('email');
