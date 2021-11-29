@@ -1,42 +1,14 @@
-import bcrypt from 'bcrypt';
-import { v4 as uuid } from 'uuid';
-import connection from '../database.js';
-import { isSignUpDataValid } from '../validation/signUp.js';
+import * as userService from '../services/userService.js';
 
 async function signIn(req, res) {
   const { email, password } = req.body;
-
   if (!email || !password) return res.sendStatus(400);
-
   try {
-    const result = await connection.query(
-      'SELECT id, name, password FROM users WHERE email = $1;',
-      [email],
-    );
-    const user = result.rows[0];
-    if (!user) {
-      return res.sendStatus(404);
-    }
-    if (!bcrypt.compareSync(password, user.password)) return res.sendStatus(401);
-
-    const result2 = await connection.query('SELECT * FROM sessions WHERE user_id = $1;', [
-      user.id,
-    ]);
-    const previousSession = result2.rows[0];
-
-    const newToken = uuid();
-    if (previousSession) {
-      await connection.query('UPDATE sessions SET token = $1 WHERE user_id = $2;', [
-        newToken,
-        user.id,
-      ]);
-    } else {
-      await connection.query('INSERT INTO sessions (user_id, token) VALUES ($1, $2);', [
-        user.id,
-        newToken,
-      ]);
-    }
-
+    const object = await userService.getSignInInfos({ email, password });
+    if (object === null) return res.sendStatus(404);
+    if (object === false) return res.sendStatus(401);
+    if (object === undefined) return res.sendStatus(400);
+    const { user, newToken } = object;
     return res.status(200).send({
       name: user.name,
       token: newToken,
@@ -48,27 +20,18 @@ async function signIn(req, res) {
 }
 
 async function signUp(req, res) {
-  const { name, cpf, password, email } = req.body;
-
-  if (!isSignUpDataValid(req.body)) return res.sendStatus(400);
-
-  const passwordHash = bcrypt.hashSync(password, 10);
-
+  const { name, cpf, password, email, repeatEmail, repeatPassword } = req.body;
   try {
-    const verifyIfUserExist = await connection.query(
-      `
-      SELECT id
-      FROM users WHERE cpf=$1 OR email=$2`,
-      [cpf, email],
-    );
-    if (verifyIfUserExist.rowCount > 0) {
-      return res.sendStatus(409);
-    }
-    await connection.query(
-      'INSERT INTO users (name, cpf, password, email) VALUES ($1, $2, $3, $4);',
-      [name, cpf, passwordHash, email],
-    );
-
+    const newAccount = await userService.verifySignUpInfos({
+      name,
+      cpf,
+      password,
+      email,
+      repeatEmail,
+      repeatPassword,
+    });
+    if (newAccount === null) return res.sendStatus(400);
+    if (newAccount === false) return res.sendStatus(409);
     return res.sendStatus(201);
   } catch (error) {
     console.error(error);
