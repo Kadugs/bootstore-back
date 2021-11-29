@@ -24,11 +24,11 @@ app.get('/products', productsController.getProducts);
 app.get('/product/:code', productsController.getProductDetails);
 app.get('/products/quantity/:codes', productsController.getProductQuantity);
 
-app.get('/purchase', purchaseController.getPurchaseProducts);
-app.post('/purchase', purchaseController.confirmPurchase);
+app.get('/purchase', verifyToken, purchaseController.getPurchaseProducts);
+app.post('/purchase', verifyToken, purchaseController.confirmPurchase);
 
 app.get('/ratings', ratingController.getProductsRatings);
-app.post('/ratings', ratingController.postProductsRating);
+app.post('/ratings', verifyToken, ratingController.postProductsRating);
 app.get('/ratings/:code', ratingController.getProductRating);
 
 export default app;

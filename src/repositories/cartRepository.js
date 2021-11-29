@@ -66,6 +66,19 @@ async function deleteItemFromCart({ userId, productId }) {
   return result.rows[0];
 }
 
+async function getCartProductsByToken(token) {
+  const result = await connection.query(
+    `
+        SELECT cart.product_id as "productId", cart.quantity as "quantity", sessions.user_id as "userId"
+        FROM sessions
+        JOIN cart
+        ON sessions.user_id = cart.user_id
+        WHERE sessions.token = $1`,
+    [token],
+  );
+  return result.rows;
+}
+
 export {
   getCartItemsByToken,
   getItemFromCart,
@@ -73,4 +86,5 @@ export {
   insertItemToCart,
   getProductFromUserCartByToken,
   deleteItemFromCart,
+  getCartProductsByToken,
 };
