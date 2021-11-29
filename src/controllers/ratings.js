@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import connection from '../database/database.js';
 
 async function getProductsRatings(req, res) {
   try {
     const result = await connection.query(
-      'SELECT sales.rating, products.code FROM sales JOIN products ON sales.product_id = products.id;'
+      'SELECT sales.rating, products.code FROM sales JOIN products ON sales.product_id = products.id;',
     );
 
     const ratings = [];
@@ -12,11 +13,10 @@ async function getProductsRatings(req, res) {
     while (separatedRatings.length > 0) {
       const productCode = separatedRatings[0].code;
       const productRatings = separatedRatings.filter(
-        (rating) => rating.code === productCode
+        (rating) => rating.code === productCode,
       );
-      const averageRating =
-        productRatings.map((item) => item.rating).reduce((a, b) => a + b, 0) /
-        productRatings.length;
+      const averageRating = productRatings.map((item) => item.rating).reduce((a, b) => a + b, 0)
+      / productRatings.length;
 
       ratings.push({
         productCode,
@@ -24,7 +24,7 @@ async function getProductsRatings(req, res) {
         quantity: productRatings.length,
       });
       separatedRatings = separatedRatings.filter(
-        (rating) => rating.code !== productCode
+        (rating) => rating.code !== productCode,
       );
     }
 
@@ -42,7 +42,7 @@ async function getProductRating(req, res) {
       `SELECT sales.rating as "rating", products.id as "productId", sales.id as "salesId"
         FROM sales JOIN products ON sales.product_id = products.id
         WHERE products.code = $1`,
-      [code]
+      [code],
     );
     let averageRating = 0;
     if (result.rowCount === 0) {
@@ -82,7 +82,7 @@ async function postProductsRating(req, res) {
       JOIN sessions ON sales.user_id = sessions.id
       WHERE products.code = $1 AND sessions.token = $2;
     `,
-      [code, token]
+      [code, token],
     );
     let query = '';
     anotherRatings.rows.forEach((item) => {

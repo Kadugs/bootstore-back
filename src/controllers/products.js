@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import connection from '../database/database.js';
 
 async function getProducts(req, res) {
@@ -34,8 +35,8 @@ async function getProductDetails(req, res) {
       `SELECT products.name, description, code, quantity, value, image,
        brands.name as brand, categories.name as category 
        FROM products
-       JOIN brands ON products.brand = brands.id
-       JOIN categories ON products.category = categories.id
+       JOIN brands ON products.brand_id = brands.id
+       JOIN categories ON products.category_id = categories.id
        WHERE products.code = $1;`,
       // eslint-disable-next-line comma-dangle
       [productId]
