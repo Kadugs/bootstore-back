@@ -100,9 +100,10 @@ ALTER TABLE "sales" ADD CONSTRAINT "sales_fk1" FOREIGN KEY ("product_id") REFERE
 
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 
-
-
-
-
-
-
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;

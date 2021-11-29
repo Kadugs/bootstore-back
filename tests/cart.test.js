@@ -1,13 +1,37 @@
+/* eslint-disable no-undef */
+import '../setup';
 import supertest from 'supertest';
 import faker from 'faker';
 import app from '../src/app.js';
-import connection from '../src/database/database.js';
+import connection from '../src/database.js';
 import { createProduct } from './factories/productFactory.js';
 import { createSession } from './factories/userFactory.js';
 
 const agent = supertest(app);
 
+beforeAll(async () => {
+  await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
+});
 describe('GET /cart', () => {
+  beforeEach(async () => {
+    await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
+  });
   it('return 401 for no token', async () => {
     const result = await agent.get('/cart');
 
@@ -18,29 +42,31 @@ describe('GET /cart', () => {
     const session = await createSession();
     const token = `Bearer ${session.token}`;
 
-    const result = await agent
-      .get('/cart')
-      .set('authorization', token);
+    const result = await agent.get('/cart').set('authorization', token);
 
     expect(result.status).toEqual(200);
   });
 });
 
 describe('POST /cart', () => {
-  afterAll(async () => {
-    await connection.query('DELETE FROM cart;');
-    await connection.query('DELETE FROM sessions;');
-    await connection.query('DELETE FROM users;');
-    await connection.query('DELETE FROM products;');
+  beforeEach(async () => {
+    await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
   });
-
   it('should return 400 to invalid body', async () => {
-    const result = await agent
-      .post('/cart')
-      .send({
-        code: '',
-        quantity: 0,
-      });
+    const session = await createSession();
+
+    const result = await agent.post('/cart').set('authorization', session.token).send({
+      code: '',
+      quantity: 0,
+    });
 
     expect(result.status).toEqual(400);
   });
@@ -72,4 +98,7 @@ describe('POST /cart', () => {
 
     expect(result.status).toEqual(200);
   });
+});
+afterAll(() => {
+  connection.end();
 });

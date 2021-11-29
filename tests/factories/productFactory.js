@@ -1,33 +1,36 @@
 import faker from 'faker';
-import connection from '../../src/database/database.js';
+import connection from '../../src/database.js';
 
-faker.locale = 'pt_BR';
-
-export async function createBrand() {
+async function createBrand() {
   const brand = {
     name: faker.company.companyName(),
   };
 
-  const testBrand = await connection.query('INSERT INTO brands (name) VALUES ($1) RETURNING *;', [brand.name]);
+  const testBrand = await connection.query(
+    'INSERT INTO brands (name) VALUES ($1) RETURNING *;',
+    [brand.name],
+  );
 
   brand.id = testBrand.rows[0].id;
 
   return brand;
 }
 
-export async function createCategory() {
+async function createCategory() {
   const category = {
     name: faker.commerce.department(),
   };
-
-  const testCategory = await connection.query('INSERT INTO categories (name) VALUES ($1) RETURNING *;', [category.name]);
+  const testCategory = await connection.query(
+    'INSERT INTO categories (name) VALUES ($1) RETURNING *;',
+    [category.name],
+  );
 
   category.id = testCategory.rows[0].id;
 
   return category;
 }
 
-export async function createProduct() {
+async function createProduct() {
   const brand = await createBrand();
   const category = await createCategory();
 
@@ -42,9 +45,22 @@ export async function createProduct() {
     category: category.id,
   };
 
-  const testProduct = await connection.query('INSERT INTO products (code, name, quantity, description, value, image, brand, category) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;', [product.code, product.name, product.quantity, product.description, product.value, product.image, product.brand, product.category]);
+  const testProduct = await connection.query(
+    'INSERT INTO products (code, name, quantity, description, value, image, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;',
+    [
+      product.code,
+      product.name,
+      product.quantity,
+      product.description,
+      product.value,
+      product.image,
+      product.brand,
+      product.category,
+    ],
+  );
 
-  product.id = testProduct.id;
+  product.id = testProduct.rows[0].id;
 
   return product;
 }
+export { createBrand, createCategory, createProduct };
