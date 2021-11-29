@@ -8,6 +8,17 @@ import { createUser } from './factories/userFactory';
 
 const agent = supertest(app);
 
+beforeAll(async () => {
+  await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
+});
 afterEach(async () => {
   await connection.query(`
     DELETE FROM sessions;

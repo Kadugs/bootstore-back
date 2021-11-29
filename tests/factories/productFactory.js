@@ -59,7 +59,7 @@ async function createProduct() {
     ],
   );
 
-  product.id = testProduct.id;
+  product.id = testProduct.rows[0].id;
 
   return product;
 }

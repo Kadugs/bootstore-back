@@ -10,12 +10,27 @@ const agent = supertest(app);
 
 beforeAll(async () => {
   await connection.query(`
-    DELETE FROM cart; 
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
     DELETE FROM sessions;
     DELETE FROM users;
-    DELETE FROM products;`);
+    `);
 });
 describe('GET /cart', () => {
+  beforeEach(async () => {
+    await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
+  });
   it('return 401 for no token', async () => {
     const result = await agent.get('/cart');
 
@@ -30,7 +45,10 @@ describe('GET /cart', () => {
 
     expect(result.status).toEqual(200);
   });
-  afterAll(async () => {
+});
+
+describe('POST /cart', () => {
+  beforeEach(async () => {
     await connection.query(`
     DELETE FROM products;
     DELETE FROM categories;
@@ -41,11 +59,10 @@ describe('GET /cart', () => {
     DELETE FROM users;
     `);
   });
-});
-
-describe('POST /cart', () => {
   it('should return 400 to invalid body', async () => {
-    const result = await agent.post('/cart').send({
+    const session = await createSession();
+
+    const result = await agent.post('/cart').set('authorization', session.token).send({
       code: '',
       quantity: 0,
     });
@@ -79,17 +96,6 @@ describe('POST /cart', () => {
       .send(body);
 
     expect(result.status).toEqual(200);
-  });
-  afterAll(async () => {
-    await connection.query(`
-    DELETE FROM products;
-    DELETE FROM categories;
-    DELETE FROM brands;
-    DELETE FROM ratings;
-    DELETE FROM sales;
-    DELETE FROM sessions;
-    DELETE FROM users;
-    `);
   });
 });
 afterAll(() => {

@@ -2,8 +2,8 @@
 import connection from '../database.js';
 
 async function getPurchaseProducts(req, res) {
-  const newLocal = 'authorization';
-  const token = req.headers[newLocal]?.replace('Bearer ', '');
+  const { authorization } = req.headers;
+  const token = authorization?.replace('Bearer ', '');
 
   if (!token) return res.sendStatus(401);
   try {
@@ -25,8 +25,8 @@ async function getPurchaseProducts(req, res) {
 }
 
 async function confirmPurchase(req, res) {
-  const newLocal = 'authorization';
-  const token = req.headers[newLocal]?.replace('Bearer ', '');
+  const { authorization } = req.headers;
+  const token = authorization?.replace('Bearer ', '');
   if (!token) return res.sendStatus(401);
   try {
     const userInfos = await connection.query(

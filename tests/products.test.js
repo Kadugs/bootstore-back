@@ -45,17 +45,17 @@ describe('GET /products/quantity/:codes', () => {
     expect(result.status).toEqual(200);
   });
 
-  // afterAll(async () => {
-  //   await connection.query(`
-  //   DELETE FROM products;
-  //   DELETE FROM categories;
-  //   DELETE FROM brands;
-  //   DELETE FROM ratings;
-  //   DELETE FROM sales;
-  //   DELETE FROM sessions;
-  //   DELETE FROM users;
-  //   `);
-  // });
+  afterAll(async () => {
+    await connection.query(`
+    DELETE FROM products;
+    DELETE FROM categories;
+    DELETE FROM brands;
+    DELETE FROM ratings;
+    DELETE FROM sales;
+    DELETE FROM sessions;
+    DELETE FROM users;
+    `);
+  });
 });
 afterAll(() => {
   connection.end();

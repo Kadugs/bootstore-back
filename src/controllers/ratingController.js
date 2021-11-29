@@ -67,8 +67,8 @@ async function getProductRating(req, res) {
 }
 
 async function postProductsRating(req, res) {
-  const newLocal = 'authorization';
-  const token = req.headers[newLocal]?.replace('Bearer ', '');
+  const { authorization } = req.headers;
+  const token = authorization?.replace('Bearer ', '');
   if (!token) return res.sendStatus(401);
   const { code, value } = req.body;
   try {
