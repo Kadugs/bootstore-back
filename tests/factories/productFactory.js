@@ -46,7 +46,7 @@ async function createProduct() {
   };
 
   const testProduct = await connection.query(
-    'INSERT INTO products (code, name, quantity, description, value, image, brand, category) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;',
+    'INSERT INTO products (code, name, quantity, description, value, image, brand_id, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;',
     [
       product.code,
       product.name,

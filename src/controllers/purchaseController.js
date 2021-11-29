@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import connection from '../database.js';
 
 async function getPurchaseProducts(req, res) {

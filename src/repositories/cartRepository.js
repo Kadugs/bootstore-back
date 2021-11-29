@@ -25,18 +25,22 @@ async function updateUserCart({ quantity, productId }) {
     `
         UPDATE cart
         SET quantity = $1
-        WHERE id = $2;
-        RETURNING *`,
+        WHERE id = $2
+        RETURNING *;`,
     [quantity, productId],
   );
   return result.rows[0];
 }
 
 async function insertItemToCart({ userId, productId, quantity }) {
-  await connection.query(
-    'INSERT INTO cart (user_id, product_id, quantity) VALUES ($1, $2, $3);',
+  const result = await connection.query(
+    `INSERT INTO cart
+     (user_id, product_id, quantity)
+     VALUES ($1, $2, $3)
+      RETURNING *;`,
     [userId, productId, quantity],
   );
+  return result.rows[0];
 }
 async function getProductFromUserCartByToken({ code, token }) {
   const result = await connection.query(
@@ -54,8 +58,8 @@ async function getProductFromUserCartByToken({ code, token }) {
 async function deleteItemFromCart({ userId, productId }) {
   const result = await connection.query(
     `DELETE FROM cart 
-    WHERE user_id = $1 AND product_id = $2;
-    RETURNING *
+    WHERE user_id = $1 AND product_id = $2
+    RETURNING *;
     `,
     [userId, productId],
   );

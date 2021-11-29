@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as cartSevice from '../services/cartSevice.js';
 
 async function getCart(req, res) {

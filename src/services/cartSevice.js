@@ -30,7 +30,10 @@ async function addItemToCart({ code, quantity, token }) {
 }
 
 async function deleteItemFromCart({ code, token }) {
-  const itemToDelete = await cartRepository.getItemFromCartByToken({ code, token });
+  const itemToDelete = await cartRepository.getProductFromUserCartByToken({
+    code,
+    token,
+  });
   const { userId, productId } = itemToDelete;
   if (!userId || !productId) {
     return undefined;

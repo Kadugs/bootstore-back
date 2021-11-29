@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import connection from '../database.js';
@@ -15,8 +14,9 @@ async function signIn(req, res) {
       [email],
     );
     const user = result.rows[0];
-
-    if (!user) return res.sendStatus(404);
+    if (!user) {
+      return res.sendStatus(404);
+    }
     if (!bcrypt.compareSync(password, user.password)) return res.sendStatus(401);
 
     const result2 = await connection.query('SELECT * FROM sessions WHERE user_id = $1;', [
@@ -42,7 +42,7 @@ async function signIn(req, res) {
       token: newToken,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.sendStatus(500);
   }
 }
